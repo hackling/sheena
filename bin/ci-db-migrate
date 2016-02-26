@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -euo pipefail
+
+environment="$1"
+release="${APP}-${environment}"
+
+plain-utils pull "${release}"
+plain-utils run "${release}" $@
