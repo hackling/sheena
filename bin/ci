@@ -4,7 +4,7 @@ set -eo pipefail
 
 if [ -z "$APP_NAME" ]; then
   echo "APP_NAME must be set"
-  exit
+  exit 1
 fi
 
 export APP_BASE_DIR="$(realpath "$(dirname "$0")/..")"

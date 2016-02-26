@@ -2,6 +2,11 @@
 
 set -eo pipefail
 
+if [ -z "$TEST_SCRIPT" ]; then
+  echo "TEST_SCRIPT must be set"
+  exit 1
+fi
+
 docker pull "${DOCKER_REPOSITORY}:${BUILDKITE_COMMIT}"
 
-isolated-docker-compose run $@
+$TEST_SCRIPT $@
