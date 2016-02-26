@@ -21,7 +21,7 @@ latest_commit_tag="buildkite-latest"
 
 docker pull "${DOCKER_REPOSITORY}:${latest_commit_tag}" || true
 
-if [ -n "$PREBUILD"]; then
+if [ -z "$PREBUILD"]; then
   prebuild
 fi
 
