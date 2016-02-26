@@ -21,7 +21,9 @@ latest_commit_tag="buildkite-latest"
 
 docker pull "${DOCKER_REPOSITORY}:${latest_commit_tag}" || true
 
-prebuild
+if [[ "$PREBUILD" == 'true']]; then
+  prebuild
+fi
 
 docker build -t "${APP}" .
 docker tag -f "${APP}" "${DOCKER_REPOSITORY}:${latest_commit_tag}"
