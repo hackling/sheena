@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eo pipefail
+
+isolated-docker-compose stop
+isolated-docker-compose rm -fv
