@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -euo pipefail
+
+PREBUILD_TIMESTAMP="201501010000"
+PREBUILD_FILES="REVISION Dockerfile.ADD.*.tar"
+
+function prebuild() {
+  git rev-parse HEAD > REVISION
+  for stage_txt in Dockerfile.ADD.*.txt; do
+    stage="$(basename "$stage_txt" .txt)"
+    stage_tar="${stage}.tar"
+    git ls-files | grep -f "$stage_txt" | xargs git archive --format=tar -o "$stage_tar" HEAD
+    bin/canonicalize-tar "$stage_tar" canonical.tar
+    mv canonical.tar "$stage_tar"
+  done
+  touch -t "${PREBUILD_TIMESTAMP}" $PREBUILD_FILES
+}
+
+latest_commit_tag="buildkite-latest"
+
+docker pull "${DOCKER_REPOSITORY}:${latest_commit_tag}" || true
+
+prebuild
+
+docker build -t "${APP}" .
+docker tag -f "${APP}" "${DOCKER_REPOSITORY}:${latest_commit_tag}"
+docker tag -f "${APP}" "${DOCKER_REPOSITORY}:${BUILDKITE_COMMIT}"
+docker push "${DOCKER_REPOSITORY}:${latest_commit_tag}"
+docker push "${DOCKER_REPOSITORY}:${BUILDKITE_COMMIT}"
