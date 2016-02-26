@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -eo pipefail
+
+export APP_NAME="your_app_name" # This needs to be configured on a per app basis
+
+export APP_BASE_DIR="$(realpath "$(dirname "$0")/..")"
+export APP="${APP:-$APP_NAME}"
+export APP_BIN_DIR="$APP_BASE_DIR/bin"
+export DOCKER_REPOSITORY="quay.io/everydayhero/${APP}"
+export DOCKER_COMPOSE_PROJECT_NAME=$(echo "${APP}-ci-${BUILDKITE_JOB_ID}" | sed 's/-/xox/g')
+
+isolated-docker-compose() {
+  docker-compose --project-name "$DOCKER_COMPOSE_PROJECT_NAME" "$@"
+}
+export -f isolated-docker-compose
+
+cmd="$1" && shift
+
+[ ! -f "$APP_BIN_DIR/ci-$cmd" ] && echo "Invalid command: $cmd"
+
+"$APP_BIN_DIR/ci-$cmd" "$@"
