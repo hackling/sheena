@@ -2,7 +2,10 @@
 
 set -eo pipefail
 
-export APP_NAME="your_app_name" # This needs to be configured on a per app basis
+if [ -z "$APP_NAME"]; then
+  echo "APP_NAME must be set"
+  exit
+fi
 
 export APP_BASE_DIR="$(realpath "$(dirname "$0")/..")"
 export APP="${APP:-$APP_NAME}"
