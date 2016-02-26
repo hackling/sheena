@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-if [ -z "$APP_NAME"]; then
+if [ -z "$APP_NAME" ]; then
   echo "APP_NAME must be set"
   exit
 fi
