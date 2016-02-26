@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -euo pipefail
+
+tag=$1
+
+docker pull "${DOCKER_REPOSITORY}:${BUILDKITE_COMMIT}" > /dev/null
+docker tag -f "${DOCKER_REPOSITORY}:${BUILDKITE_COMMIT}" "${DOCKER_REPOSITORY}:${tag}"
+docker push "${DOCKER_REPOSITORY}:${tag}" > /dev/null
