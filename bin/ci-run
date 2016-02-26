@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eo pipefail
+
+docker pull "${DOCKER_REPOSITORY}:${BUILDKITE_COMMIT}"
+
+isolated-docker-compose run $@
